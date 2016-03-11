@@ -1,0 +1,13 @@
+<div>
+    <h2 class="post-title"><span ng-bind="ctrl.currentPost().title"></span></h2>
+    <div class="byline">
+        Posted by <a ng-href="mailto:{{ctrl.currentPost().authorEmail}}"><span ng-bind="ctrl.currentPost().author"></span></a> 
+               on <span ng-bind="ctrl.toPrintableDate( ctrl.currentPost().pubDate )"></span><br>
+    </div>
+    <div>
+        <a ng-href="/#/edit/{{ctrl.currentPost().uuid}}">(edit)</a>
+    </div>
+    <div class="post-body">
+        <span ng-bind-html="ctrl.currentPost().bodyAsHtml"></span>
+    </div>
+</div>

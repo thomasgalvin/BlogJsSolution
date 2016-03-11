@@ -1,0 +1,33 @@
+<h1>Edit Post</h1>
+
+<label>
+    Title:<br>
+    <input type="text" ng-model="ctrl.currentEditPost().title">
+</label>
+<br><br>
+
+<label>
+    Author:<br>
+    <input type="text" ng-model="ctrl.currentEditPost().author">
+</label>
+<br><br>
+
+<label>
+    Author Email:<br>
+    <input type="text" ng-model="ctrl.currentEditPost().authorEmail">
+</label>
+<br><br>
+
+<label>
+    Pull Quote:<br>
+    <textarea ng-model="ctrl.currentEditPost().pullQuote"></textarea>
+</label>
+<br><br>
+
+<label>
+    Body:<br>
+    <textarea ng-model="ctrl.currentEditPost().body"></textarea>
+</label>
+<br><br>
+
+<button ng-click="ctrl.save()">Save</button>

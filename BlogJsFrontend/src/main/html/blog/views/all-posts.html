@@ -1,0 +1,24 @@
+<h1>All posts</h1>
+
+<div ng-repeat="post in ctrl.allPosts()">
+    <a ng-href="/#/view/{{post.uuid}}">
+        <h2 class="post-title"><span ng-bind="post.title"></span></h2>
+    </a>
+    
+    <div class="byline">
+        <a ng-href="/#/view/{{post.uuid}}">Posted by</a>
+        <a ng-href="mailto:{{post.authorEmail}}"><span ng-bind="post.author"></span></a> 
+        <a ng-href="/#/view/{{post.uuid}}">
+            on
+            <span ng-bind="ctrl.toPrintableDate( post.pubDate )"></span>
+        </a>
+        
+        <a ng-href="/#/edit/{{post.uuid}}">(edit)</a>
+    </div>
+    
+    <a ng-href="/#/view/{{post.uuid}}">
+        <div class="pull-quote">
+            <span ng-bind-html="post.pullQuoteAsHtml"></span>
+        </div>
+    </a>
+</div>
