@@ -104,7 +104,8 @@ A blog post contains the following data:
 is what should be  displayed in the editor. When a blog post is saved, the 
 server will convert the Markdown into HTML, and store these values in 
 `pullQuoteAsHtml` and `bodyAsHtml`. These are the values that should be shown 
-when displaying a blog post.
+when displaying a blog post. `postDate` is a `long` containing a Unix 
+timestamp; you can get the displayable time using `new Date(post.pubDate)`.
 
 ## Building the Project ##
 
