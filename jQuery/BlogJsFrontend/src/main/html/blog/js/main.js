@@ -29,7 +29,8 @@ var constants = {
 
 var main = function(){
     var action = getAction();
-    console.log( "Action: " + action.action + " post: " + action.id );
+    //console.log( "Action: " + action.action + " post: " + action.id );
+    $(document).ajaxError( errorHandler );
     
     if( action.action === constants.ACTION_EDIT  ){
         editPost( action.id );
@@ -43,12 +44,10 @@ var main = function(){
 }
 
 function displayPosts(){
-    console.log( "Displaying all posts" );
     $.getJSON( constants.API, doDisplayPosts );
 }
 
 function doDisplayPosts( data ){
-    console.log( "GET for all posts successful:" );
     var posts = data['posts'];
     
     var mainContent = addMainContent();
@@ -61,28 +60,22 @@ function doDisplayPosts( data ){
 }
 
 function displayPost( id ){
-    console.log( "Displaying post: " + id );
     var api = constants.API + id
     $.getJSON( api, doDisplayPost );
 }
 
 function doDisplayPost( post ){
-    console.log( "GET for post successful" );
-    console.log( post );
-    
     var html = getPostHtml( post, true );
     var mainContent = addMainContent();
     mainContent.append( html );
 }
 
 function editPost( id ){
-    console.log( "Editing post: " + id );
     var api = constants.API + id
     $.getJSON( api, doEditPost );
 }
 
 function doEditPost( post ){
-    console.log( "GET for editing post successful" );
     var html = getEditHtml( post );
     var mainContent = addMainContent();
     mainContent.append( html );
@@ -260,7 +253,7 @@ function textarea( name, id, value ){
 /// submit ///
 
 function submit(){
-    console.log( "Submit!" );
+    console.log( "Submit" );
     var post = getPostFromForm();
     
     var request = {};
@@ -290,6 +283,12 @@ function getPostFromForm(){
 function submitSuccess(data){
     var redirect = constants.UI + "?post=" + data.uuid;
     window.location.replace(redirect);
+}
+
+/// errors ///
+
+function errorHandler( data ){
+    alert( "Sorry, something went wrong with your request!" );
 }
 
 /// URL parsing ///
