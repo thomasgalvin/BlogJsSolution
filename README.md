@@ -75,10 +75,10 @@ Feel free to rename things if it  makes more sense in your framework to do so.
 
 There are four methods you need to worry about:
 
-* GET  <localhost:8080/api/posts> - gets a list of all blog posts
-* GET  <localhost:8080/api/posts/{id}> - gets a single blog post
-* POST <localhost:8080/api/posts> - stores a blog post
-* PUT  <localhost:8080/api/posts/{id}> - stores a blog post with the given UUID
+* GET  <http://localhost:8080/api/posts> - gets a list of all blog posts
+* GET  <http://localhost:8080/api/posts/{id}> - gets a single blog post
+* POST <http://localhost:8080/api/posts> - stores a blog post
+* PUT  <http://localhost:8080/api/posts/{id}> - stores a blog post with the given UUID
 
 This API is documented at <http://localhost:8080/api/swagger>, and includes 
 example data.
