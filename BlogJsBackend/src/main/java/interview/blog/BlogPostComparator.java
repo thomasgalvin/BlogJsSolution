@@ -10,6 +10,6 @@ public class BlogPostComparator
         BlogPost b1 = (BlogPost)o1;
         BlogPost b2 = (BlogPost)o2;
         
-        return (int)( b2.getPubDate() - b1.getPubDate() );
+        return (int)( b1.getPubDate() - b2.getPubDate() );
     }
 }
