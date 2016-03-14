@@ -16,7 +16,15 @@ var constants = {
     ACTION_EDIT: "edit",
     
     API: "http://localhost:8080/api/posts/",
-    UI: "http://localhost:8080/"
+    UI: "http://localhost:8080/",
+    
+    FORM_ID: "postId",
+    FORM_PUB_DATE: "postPubDate",
+    FORM_TITLE: "postTitle",
+    FORM_AUTHOR: "postAuthor",
+    FORM_AUTHOR_EMAIL: "postAuthorEmail",
+    FORM_PULL_QUOTE: "postPullQuote",
+    FORM_BODY: "postBody",
 };
 
 var main = function(){
@@ -198,14 +206,14 @@ function getEditHtml( post ){
     
     var content = "<article class='edit-post'>"
     
-    content += input( "", 'postId', post.uuid, "hidden" );
-    content += input( "", 'postPubDate', post.pubDate, "hidden" );
-    content += input( "Title", 'postTitle', post.title );
-    content += input( "Author", 'postAuthor', post.author );
-    content += input( "Email", 'postAuthorEmail', post.authorEmail );
+    content += input( "", constants.FORM_ID, post.uuid, "hidden" );
+    content += input( "", constants.FORM_PUB_DATE, post.pubDate, "hidden" );
+    content += input( "Title", constants.FORM_TITLE, post.title );
+    content += input( "Author", constants.FORM_AUTHOR, post.author );
+    content += input( "Email", constants.FORM_AUTHOR_EMAIL, post.authorEmail );
     
-    content += textarea( "Pull quote", 'postPullQuote', post.pullQuote );
-    content += textarea( "Body", 'postBody', post.body );
+    content += textarea( "Pull quote", constants.FORM_PULL_QUOTE, post.pullQuote );
+    content += textarea( "Body", constants.FORM_BODY, post.body );
     
     content += "<div class='editWidget'><button onclick='submit()'>Publish post</button></div>";
     
@@ -253,6 +261,35 @@ function textarea( name, id, value ){
 
 function submit(){
     console.log( "Submit!" );
+    var post = getPostFromForm();
+    
+    var request = {};
+    request.url = constants.API;
+    request.type = "POST";
+    request.contentType = "application/json; charset=utf-8";
+    request.dataType = "json";
+    request.data = post;
+    request.success = submitSuccess;
+    
+    $.ajax(request);
+    return false;
+}
+
+function getPostFromForm(){
+    var result = {};
+    result.uuid = $( "#" + constants.FORM_ID ).val();
+    result.pubDate = $( "#" + constants.FORM_PUB_DATE ).val();
+    result.title = $( "#" + constants.FORM_TITLE ).val();
+    result.author = $( "#" + constants.FORM_AUTHOR ).val();
+    result.authorEmail = $( "#" + constants.FORM_AUTHOR_EMAIL ).val();
+    result.pullQuote = $( "#" + constants.FORM_PULL_QUOTE ).val();
+    result.body = $( "#" + constants.FORM_BODY ).val();
+    
+    return JSON.stringify(result);
+}
+function submitSuccess(data){
+    var redirect = constants.UI + "?post=" + data.uuid;
+    window.location.replace(redirect);
 }
 
 /// URL parsing ///
@@ -264,15 +301,12 @@ function getAction(){
     var params = getUrlVars();
     for( var i = 0; i < params.length; i++ ){
         var param = params[i];
-        //console.log( param.name + " = " + param.value );
         
         if( param.name === constants.POST_ID ){
             postId = param.value;
-            //console.log( "found post ID: " + postId );
         }
         else if( param.name === constants.ACTION ){
             action = param.value;
-            //console.log( "found action: " + postId );
         }
     }
     
