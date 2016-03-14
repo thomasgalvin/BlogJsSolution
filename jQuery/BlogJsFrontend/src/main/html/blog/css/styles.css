@@ -1,0 +1,20 @@
+body, html{
+    width: 100%;
+}
+
+#mainContent{
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.editWidget{
+    padding-bottom: 10px;
+}
+
+input, textArea {
+    width: 700px;
+}
+
+article{
+    text-align: justify;
+}

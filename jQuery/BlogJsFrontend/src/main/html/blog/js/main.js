@@ -43,8 +43,7 @@ function doDisplayPosts( data ){
     console.log( "GET for all posts successful:" );
     var posts = data['posts'];
     
-    $("body").append( "<div id='mainContent'></div>" );
-    var mainContent = $("#mainContent");
+    var mainContent = addMainContent();
     
     for( var i = 0; i < posts.length; i++ ){
         var post = posts[i];
@@ -63,51 +62,31 @@ function doDisplayPost( post ){
     console.log( "GET for post successful" );
     console.log( post );
     
-    $("body").append( "<div id='mainContent'></div>" );
-    var mainContent = $("#mainContent");
-    
     var html = getPostHtml( post, true );
+    var mainContent = addMainContent();
     mainContent.append( html );
 }
 
 function editPost( id ){
     console.log( "Editing post: " + id );
+    var api = constants.API + id
+    $.getJSON( api, doEditPost );
 }
 
-function getAction(){
-    var postId = undefined;
-    var action = constants.ACTION_DISPLAY;
-    
-    var params = getUrlVars();
-    for( var i = 0; i < params.length; i++ ){
-        var param = params[i];
-        //console.log( param.name + " = " + param.value );
-        
-        if( param.name === constants.POST_ID ){
-            postId = param.value;
-            //console.log( "found post ID: " + postId );
-        }
-        else if( param.name === constants.ACTION ){
-            action = param.value;
-            //console.log( "found action: " + postId );
-        }
-    }
-    
-    return new Action( postId, action );
+function doEditPost( post ){
+    console.log( "GET for editing post successful" );
+    var html = getEditHtml( post );
+    var mainContent = addMainContent();
+    mainContent.append( html );
 }
 
-function getUrlVars()
-{
-    var result = [];
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for(var i = 0; i < hashes.length; i++)
-    {
-        var hash = hashes[i].split('=');
-        var param = new Param( hash[0], hash[1] );
-        result.push( param );
-    }
-    return result;
+function addMainContent(){
+    $("body").append( "<div id='mainContent'></div>" );
+    var mainContent = $("#mainContent");
+    return mainContent;
 }
+
+/// display HTML ///
 
 function getPostHtml( post, fullHtml ){
     var content = "<article class='post'>"
@@ -202,6 +181,118 @@ function ordinal( integer ){
         return "th";
     }
 }
+
+/// edit HTML ///
+
+function getEditHtml( post ){
+    if( !post ){
+        post = {};
+        post.uuid = "";
+        post.title = "";
+        post.pubDate = 0;
+        post.author = "";
+        post.authorEmail = "";
+        post.pullQuote = "";
+        post.body = "";
+    }
+    
+    var content = "<article class='edit-post'>"
+    
+    content += input( "", 'postId', post.uuid, "hidden" );
+    content += input( "", 'postPubDate', post.pubDate, "hidden" );
+    content += input( "Title", 'postTitle', post.title );
+    content += input( "Author", 'postAuthor', post.author );
+    content += input( "Email", 'postAuthorEmail', post.authorEmail );
+    
+    content += textarea( "Pull quote", 'postPullQuote', post.pullQuote );
+    content += textarea( "Body", 'postBody', post.body );
+    
+    content += "<div class='editWidget'><button onclick='submit()'>Publish post</button></div>";
+    
+    content += "</article>";
+    return content;
+}
+
+function input( name, id, value, type ){
+    if( !type ){
+        type = "text";
+    }
+    
+    var content = "<input type='";
+    content += type;
+    content += "' id='";
+    content += id;
+    content += "' value='";
+    content += value
+    content += "'><br>";
+    
+    if( name ){
+        content = "<label>" + name + ":<br>" + content + "</label>";
+    }
+    
+    content = "<div class='editWidget'>" + content + "</div>";
+    return content;
+}
+
+function textarea( name, id, value ){
+    var content = "<textarea rows='5' id='";
+    content += id;
+    content += "'>";
+    content += value;
+    content += "</textarea><br>";
+    
+    if( name ){
+        content = "<label>" + name + "<br>" + content + "</label>";
+    }
+    
+    content = "<div class='editWidget'>" + content + "</div>";
+    return content;
+}
+
+/// submit ///
+
+function submit(){
+    console.log( "Submit!" );
+}
+
+/// URL parsing ///
+
+function getAction(){
+    var postId = undefined;
+    var action = constants.ACTION_DISPLAY;
+    
+    var params = getUrlVars();
+    for( var i = 0; i < params.length; i++ ){
+        var param = params[i];
+        //console.log( param.name + " = " + param.value );
+        
+        if( param.name === constants.POST_ID ){
+            postId = param.value;
+            //console.log( "found post ID: " + postId );
+        }
+        else if( param.name === constants.ACTION ){
+            action = param.value;
+            //console.log( "found action: " + postId );
+        }
+    }
+    
+    return new Action( postId, action );
+}
+
+function getUrlVars()
+{
+    var result = [];
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++)
+    {
+        var hash = hashes[i].split('=');
+        var param = new Param( hash[0], hash[1] );
+        result.push( param );
+    }
+    return result;
+}
+
+/// run the application ///
 
 $( document ).ready( main );
 
