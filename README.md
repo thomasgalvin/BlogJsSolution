@@ -3,9 +3,8 @@
 This project is designed to test your skills as a front-end web developer,
 using the same tools and technologies our team employs on a daily basis.
 
-The goal is pretty simple. The project includes a Java-based web service which
-exposes a REST API for a blog. The API itself is pretty simple; it doesn't even
-authenticate users. 
+This project includes a Java-based web service which exposes a REST API for a 
+blog. The API itself is pretty simple; it doesn't even authenticate users. 
 
 The goal of this exercise is to create a basic blog application, capable of:
 
@@ -67,8 +66,10 @@ and tools you're most comfortable with.
 
 The layout of the application is also based on the Boilerplate template. The 
 main file is `index.html`, the main style sheet is `css/styles.css`, and
-the main Javascript file is `js/main.js`. Feel free to rename things if it 
-makes more sense in your framework to do so.
+the main Javascript file is `js/main.js`. Third-party libraries and frameworks
+can be added to `js/vendor`.
+
+Feel free to rename things if it  makes more sense in your framework to do so.
 
 ## The API ##
 
