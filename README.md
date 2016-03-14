@@ -5,15 +5,7 @@ using the same tools and technologies our team employs on a daily basis.
 
 The goal is pretty simple. The project includes a Java-based web service which
 exposes a REST API for a blog. The API itself is pretty simple; it doesn't even
-authenticate users. There are four methods you need to worry about:
-
-* GET  localhost:8080/api/posts - gets a list of all blog posts
-* GET  localhost:8080/api/posts/{id} - gets a single blog post
-* POST localhost:8080/api/posts - stores a blog post
-* PUT  localhost:8080/api/posts/{id} - stores a blog post with the given UUID
-
-This API is documented at <http://localhost:8080/api/swagger>, and includes 
-example data.
+authenticate users. 
 
 The goal of this exercise is to create a basic blog application, capable of:
 
@@ -24,7 +16,7 @@ The goal of this exercise is to create a basic blog application, capable of:
     show the post's body HTML.
 *   Edit a post. Display a UI that allows the user to edit the post's title,
     author, author email, pull quote, and body, then save it on the server.
-
+    
 You can use whatever tools you're most comfortable with. Google anything you
 need to look up. Download whatever libraries or frameworks you like. Ask 
 questions if you need something clarified. Work like you'd really work.
@@ -78,6 +70,40 @@ main file is `index.html`, the main style sheet is `css/styles.css`, and
 the main Javascript file is `js/main.js`. Feel free to rename things if it 
 makes more sense in your framework to do so.
 
+## The API ##
+
+There are four methods you need to worry about:
+
+* GET  <localhost:8080/api/posts> - gets a list of all blog posts
+* GET  <localhost:8080/api/posts/{id}> - gets a single blog post
+* POST <localhost:8080/api/posts> - stores a blog post
+* PUT  <localhost:8080/api/posts/{id}> - stores a blog post with the given UUID
+
+This API is documented at <http://localhost:8080/api/swagger>, and includes 
+example data.
+
+A blog post contains the following data:
+
+```javascript
+{
+  "uuid": "string",
+  "title": "string",
+  "pubDate": 0,
+  "author": "string",
+  "authorEmail": "string",
+  "pullQuote": "string",
+  "body": "string",
+  "pullQuoteAsHtml": "string",
+  "bodyAsHtml": "string"
+}
+```
+
+`pullQuote` and `body` are 
+[Markdown](https://daringfireball.net/projects/markdown/) formatted text. This 
+is what should be  displayed in the editor. When a blog post is saved, the 
+server will convert the Markdown into HTML, and store these values in 
+`pullQuoteAsHtml` and `bodyAsHtml`. These are the values that should be shown 
+when displaying a blog post.
 
 ## Building the Project ##
 
