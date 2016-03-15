@@ -1,3 +1,5 @@
+(function(){
+    
 var Param = function( name, value ){
     this.name = name;
     this.value = value;
@@ -329,3 +331,4 @@ function getUrlVars()
 
 $( document ).ready( main );
 
+})()
