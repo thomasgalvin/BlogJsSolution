@@ -34,8 +34,6 @@ var constants = {
 var main = function(){
     submit = doSubmit;
     var action = getAction();
-    //console.log( "Action: " + action.action + " post: " + action.id );
-    $(document).ajaxError( errorHandler );
     
     if( action.action === constants.ACTION_EDIT  ){
         editPost( action.id );
@@ -48,47 +46,76 @@ var main = function(){
     }
 }
 
+var xhr = new XMLHttpRequest();
+
 function displayPosts(){
-    $.getJSON( constants.API, doDisplayPosts );
+    //$.getJSON( constants.API, doDisplayPosts );
+    xhr.open( "GET", constants.API, true );
+    xhr.send();
+    xhr.onreadystatechange = doDisplayPosts;
 }
 
-function doDisplayPosts( data ){
-    var posts = data['posts'];
-    
-    var mainContent = addMainContent();
-    
-    for( var i = 0; i < posts.length; i++ ){
-        var post = posts[i];
-        var html = getPostHtml( post, false );
-        mainContent.append( html );
+function doDisplayPosts( event ){
+    if (xhr.readyState == 4 && xhr.status == 200) {
+        var response = JSON.parse(xhr.responseText);
+        
+        var posts = response['posts'];
+        var mainContent = addMainContent();
+
+        for( var i = 0; i < posts.length; i++ ){
+            var post = posts[i];
+            var html = getPostHtml( post, false );
+            mainContent.innerHTML += html;
+        }
+    }
+    else if( xhr.status >= 300 ){
+        errorHandler();
     }
 }
 
 function displayPost( id ){
     var api = constants.API + id
-    $.getJSON( api, doDisplayPost );
+    xhr.open( "GET", api, true );
+    xhr.send();
+    xhr.onreadystatechange = doDisplayPost;
 }
 
 function doDisplayPost( post ){
-    var html = getPostHtml( post, true );
-    var mainContent = addMainContent();
-    mainContent.append( html );
+    if (xhr.readyState == 4 && xhr.status == 200) {
+        var post = JSON.parse(xhr.responseText);
+        
+        var html = getPostHtml( post, true );
+        var mainContent = addMainContent();
+        mainContent.innerHTML += html;
+    }
+    else if( xhr.status >= 300 ){
+        errorHandler();
+    }
 }
 
 function editPost( id ){
     var api = constants.API + id
-    $.getJSON( api, doEditPost );
+    xhr.open( "GET", api, true );
+    xhr.send();
+    xhr.onreadystatechange = doEditPost;
 }
 
 function doEditPost( post ){
-    var html = getEditHtml( post );
-    var mainContent = addMainContent();
-    mainContent.append( html );
+    if (xhr.readyState == 4 && xhr.status == 200) {
+        var post = JSON.parse(xhr.responseText);
+        
+        var html = getEditHtml( post, true );
+        var mainContent = addMainContent();
+        mainContent.innerHTML += html;
+    }
+    else if( xhr.status >= 300 ){
+        errorHandler();
+    }
 }
 
 function addMainContent(){
-    $("body").append( "<div id='mainContent'></div>" );
-    var mainContent = $("#mainContent");
+    document.body.innerHTML += "<div id='mainContent'></div>";
+    var mainContent = document.getElementById("mainContent");
     return mainContent;
 }
 
@@ -261,33 +288,38 @@ function doSubmit(){
     console.log( "Submit" );
     var post = getPostFromForm();
     
-    var request = {};
-    request.url = constants.API;
-    request.type = "POST";
-    request.contentType = "application/json; charset=utf-8";
-    request.dataType = "json";
-    request.data = post;
-    request.success = submitSuccess;
+    xhr = new XMLHttpRequest();
+    xhr.open( "POST", constants.API, true );
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.send( post );
+    xhr.onreadystatechange = submitSuccess;
     
-    $.ajax(request);
     return false;
 }
 
 function getPostFromForm(){
     var result = {};
-    result.uuid = $( "#" + constants.FORM_ID ).val();
-    result.pubDate = $( "#" + constants.FORM_PUB_DATE ).val();
-    result.title = $( "#" + constants.FORM_TITLE ).val();
-    result.author = $( "#" + constants.FORM_AUTHOR ).val();
-    result.authorEmail = $( "#" + constants.FORM_AUTHOR_EMAIL ).val();
-    result.pullQuote = $( "#" + constants.FORM_PULL_QUOTE ).val();
-    result.body = $( "#" + constants.FORM_BODY ).val();
+    
+    result.uuid = document.getElementById( constants.FORM_ID ).value;
+    result.pubDate = document.getElementById( constants.FORM_PUB_DATE ).value;
+    result.title = document.getElementById( constants.FORM_TITLE ).value;
+    result.author = document.getElementById( constants.FORM_AUTHOR ).value;
+    result.authorEmail = document.getElementById( constants.FORM_AUTHOR_EMAIL ).value;
+    result.pullQuote = document.getElementById( constants.FORM_PULL_QUOTE ).value;
+    result.body = document.getElementById( constants.FORM_BODY ).value;
     
     return JSON.stringify(result);
 }
 function submitSuccess(data){
-    var redirect = constants.UI + "?post=" + data.uuid;
-    window.location.replace(redirect);
+    if(xhr.readyState == 4 && xhr.status == 200) {
+        var data = JSON.parse(xhr.responseText);
+        
+        var redirect = constants.UI + "?post=" + data.uuid;
+        window.location.replace(redirect);
+    }
+    else if( xhr.status >= 300 ){
+        errorHandler();
+    }
 }
 
 /// errors ///
@@ -332,6 +364,6 @@ function getUrlVars()
 
 /// run the application ///
 
-$( document ).ready( main );
+window.onload = main;
 
 })()

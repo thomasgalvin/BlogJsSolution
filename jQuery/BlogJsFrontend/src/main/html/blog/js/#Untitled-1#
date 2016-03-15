@@ -1,0 +1,7 @@
+result.uuid = document.getElementById( constants.FORM_ID ).value;
+    result.pubDate = document.getElementById( constants.FORM_PUB_DATE ).value;
+    result.title = document.getElementById( constants.FORM_TITLE ).value;
+    result.author = document.getElementById( constants.FORM_AUTHOR ).value;
+    result.authorEmail = document.getElementById( constants.FORM_AUTHOR_EMAIL ).value;
+    result.pullQuote = document.getElementById( constants.FORM_PULL_QUOTE ).value;
+    result.body = document.getElementById( constants.FORM_BODY ).value;
